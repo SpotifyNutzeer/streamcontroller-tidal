@@ -47,4 +47,6 @@ Cross-platform music links provided by [Odesli / song.link](https://odesli.co).
 
 ## License
 
-MIT
+GPL-2.0-only — see [LICENSE](LICENSE).
+
+Copyright (C) 2026 Paul Reitmayer
