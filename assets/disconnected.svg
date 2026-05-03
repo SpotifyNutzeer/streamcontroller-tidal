@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" fill="#1A1A1A"/>
+  <!-- Durchgestrichenes WLAN-Symbol -->
+  <circle cx="50" cy="55" r="6" fill="#FF4444"/>
+  <path d="M34 42 Q50 30 66 42" fill="none" stroke="#FF4444" stroke-width="5" stroke-linecap="round"/>
+  <path d="M22 32 Q50 14 78 32" fill="none" stroke="#555555" stroke-width="5" stroke-linecap="round"/>
+  <!-- Diagonaler Strich -->
+  <line x1="20" y1="20" x2="80" y2="80" stroke="#FF4444" stroke-width="5" stroke-linecap="round"/>
+</svg>

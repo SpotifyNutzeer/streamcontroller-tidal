@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" fill="#1A1A1A"/>
+  <!-- Vertikaler Balken -->
+  <rect x="12" y="20" width="10" height="60" rx="2" fill="#FFFFFF"/>
+  <!-- Erstes Dreieck -->
+  <polygon points="52,20 52,80 22,50" fill="#FFFFFF"/>
+  <!-- Zweites Dreieck -->
+  <polygon points="85,20 85,80 55,50" fill="#FFFFFF"/>
+</svg>

@@ -1,0 +1,11 @@
+{
+    "id": "wtf_paul_TidalController",
+    "name": "Tidal Controller",
+    "description": "Steuere Tidal-Musikwiedergabe über TidaLuna (WebSocket API)",
+    "version": "1.0.0",
+    "github": "https://github.com/SpotifyNutzeer/streamcontroller-tidal",
+    "thumbnail": "assets/thumbnail.svg",
+    "tags": ["music", "tidal", "media", "playback"],
+    "minimum-app-version": "1.1.1-alpha",
+    "pip-packages": ["websockets", "requests"]
+}

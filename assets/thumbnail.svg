@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <rect width="200" height="200" fill="#1A1A1A" rx="16"/>
+  <!-- Tidal-Wellen in grün -->
+  <path d="M30 85 Q65 60 100 85 Q135 110 170 85" fill="none" stroke="#00A36C" stroke-width="10" stroke-linecap="round"/>
+  <path d="M30 110 Q65 85 100 110 Q135 135 170 110" fill="none" stroke="#00A36C" stroke-width="10" stroke-linecap="round"/>
+  <!-- Text -->
+  <text x="100" y="160" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="bold" fill="#FFFFFF">Tidal</text>
+  <text x="100" y="182" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#888888">Controller</text>
+</svg>
