@@ -42,6 +42,13 @@ class TidalBackend:
     WS_URL = "ws://127.0.0.1:24123/"
     ODESLI_URL = "https://api.song.link/v1-alpha.1/links"
     RECONNECT_DELAY = 5
+    # Felder, die _handle_message tatsaechlich auswertet. Wir abonnieren nur
+    # diese, damit der Server nicht dauerhaft die komplette playQueue
+    # mitstreamt (~490 KB/Nachricht, ~31 Mbit/s).
+    SUBSCRIBE_FIELDS = [
+        "playing", "shuffle", "repeatMode",
+        "track", "artist", "album", "volume", "coverUrl",
+    ]
 
     def __init__(self):
         self.state = TidalState()
@@ -71,25 +78,30 @@ class TidalBackend:
                     self._ws = ws
                     self.state.connected = True
                     logger.info("TidalBackend: WebSocket verbunden")
-                    # Nur die Felder abonnieren, die _handle_message auswertet.
-                    # all:True wuerde bei jedem Tick die komplette playQueue
-                    # mitsenden (~490 KB/Nachricht, ~31 Mbit/s) – wir lesen sie nie.
-                    await ws.send(json.dumps({
-                        "action": "subscribe",
-                        "all": False,
-                        "fields": [
-                            "playing", "shuffle", "repeatMode",
-                            "track", "artist", "album", "volume", "coverUrl",
-                        ],
-                    }))
+                    # all:True liefert beim Verbinden einmalig einen
+                    # vollstaendigen Snapshot, damit die Kachel sofort den
+                    # aktuellen Track zeigt. Direkt nach dem ersten Snapshot
+                    # schalten wir per all:False auf SUBSCRIBE_FIELDS herunter,
+                    # damit der Server nicht dauerhaft die playQueue streamt.
+                    await ws.send(json.dumps({"action": "subscribe", "all": True, "fields": []}))
                     self._notify()
 
+                    downgraded = False
                     async for raw in ws:
                         try:
                             data = json.loads(raw)
-                            self._handle_message(data)
                         except json.JSONDecodeError:
                             logger.warning(f"TidalBackend: Ungültige JSON-Nachricht: {raw!r}")
+                            continue
+                        self._handle_message(data)
+                        # Nach dem ersten echten Snapshot den Firehose abschalten.
+                        if not downgraded and isinstance(data, dict) and data.get("type") == "update":
+                            await ws.send(json.dumps({
+                                "action": "subscribe",
+                                "all": False,
+                                "fields": self.SUBSCRIBE_FIELDS,
+                            }))
+                            downgraded = True
 
             except Exception as exc:
                 logger.warning(f"TidalBackend: Verbindungsfehler – {exc}")
