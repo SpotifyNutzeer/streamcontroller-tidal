@@ -71,7 +71,17 @@ class TidalBackend:
                     self._ws = ws
                     self.state.connected = True
                     logger.info("TidalBackend: WebSocket verbunden")
-                    await ws.send(json.dumps({"action": "subscribe", "all": True, "fields": []}))
+                    # Nur die Felder abonnieren, die _handle_message auswertet.
+                    # all:True wuerde bei jedem Tick die komplette playQueue
+                    # mitsenden (~490 KB/Nachricht, ~31 Mbit/s) – wir lesen sie nie.
+                    await ws.send(json.dumps({
+                        "action": "subscribe",
+                        "all": False,
+                        "fields": [
+                            "playing", "shuffle", "repeatMode",
+                            "track", "artist", "album", "volume", "coverUrl",
+                        ],
+                    }))
                     self._notify()
 
                     async for raw in ws:
