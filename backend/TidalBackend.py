@@ -117,11 +117,21 @@ class TidalBackend:
     # ------------------------------------------------------------------ #
 
     def _handle_message(self, data: dict):
-        # TidaLuna sendet: {"type": "update", "fields": { ... }}
+        # TidaLuna sendet je nach Subscription zwei Formen:
+        #   all:true  -> {"type":"update","all":true,"fields":{ ... }}        (Snapshot)
+        #   all:false -> {"type":"update","all":false,"field":"x","value":y}  (Einzelfeld)
+        # Wir abonnieren nach dem ersten Snapshot per all:false, deshalb MUESSEN
+        # beide Formen behandelt werden – sonst werden alle weiteren Updates
+        # ignoriert und die Kachel friert nach dem Start ein.
         if data.get("type") != "update":
             return
 
-        f = data.get("fields", {})
+        if "fields" in data:
+            f = data.get("fields") or {}
+        elif "field" in data:
+            f = {data["field"]: data.get("value")}
+        else:
+            f = {}
         changed = False
 
         # Wiedergabestatus: f["playing"] ist ein boolean
